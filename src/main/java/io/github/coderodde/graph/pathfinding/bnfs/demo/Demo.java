@@ -1,7 +1,10 @@
 package io.github.coderodde.graph.pathfinding.bnfs.demo;
 
 import io.github.coderodde.graph.pathfinding.bnfs.BFS;
+import io.github.coderodde.graph.pathfinding.bnfs.BFHS;
+import io.github.coderodde.graph.pathfinding.bnfs.BiBFS;
 import io.github.coderodde.graph.pathfinding.bnfs.GridGraph;
+import io.github.coderodde.graph.pathfinding.bnfs.ManhattanHeuristicFunction;
 import java.util.List;
 import java.util.Random;
 
@@ -28,9 +31,31 @@ public final class Demo {
                                                 target, 
                                                 false); // No diagonal.
         
-        System.out.printf("BFS in %d ms.%n", System.currentTimeMillis() - t);
+        System.out.printf("BFS in   %d ms.%n", System.currentTimeMillis() - t);
         
         System.out.println(path1);
+        
+        t = System.currentTimeMillis();
+        
+        List<GridGraph.Cell> path2 = BiBFS.search(GRAPH, 
+                                                  source, 
+                                                  target, 
+                                                  false);
+        
+        System.out.printf("BiBFS in %d ms.%n", System.currentTimeMillis() - t);
+        
+        t = System.currentTimeMillis();
+        
+        List<GridGraph.Cell> path3 = 
+            BFHS.search(GRAPH,
+                        source,
+                        target,
+                        new ManhattanHeuristicFunction(), 
+                        false);
+        
+        System.out.printf("BFHS in  %d ms.%n", System.currentTimeMillis() - t);
+        
+        
     }
     
     private static void setRandomWalls() {

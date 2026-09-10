@@ -12,17 +12,16 @@ import java.util.Set;
  * discussed in the paper
  * <a href="https://www.sciencedirect.com/science/article/pii/S0004370205002158">Breadth-first heuristic search</a>.
  */
-public final class BHFS {
+public final class BFHS {
 
-    private BHFS() {}
+    private BFHS() {}
     
-    public List<GridGraph.Cell> search(GridGraph graph,
-                                       GridGraph.Cell source,
-                                       GridGraph.Cell target,
-                                       HeuristicFunction h,
-                                       boolean diagonal,
-                                       int u) {
-        
+    public static List<GridGraph.Cell> search(GridGraph graph,
+                                              GridGraph.Cell source,
+                                              GridGraph.Cell target,
+                                              HeuristicFunction h,
+                                              boolean diagonal,
+                                              int u) {
         checkU(u);
         
         Map<GridGraph.Cell, Integer> g                = new HashMap<>();
@@ -52,7 +51,8 @@ public final class BHFS {
                 closed.get(l).add(n);
                 
                 GridGraph.Cell sol = 
-                    expandNode(graph, 
+                    expandNode(
+                        graph,     // The owner graph.
                         n,         // Node to expand.
                         source,    // The source node
                         target,    // The target node.e
@@ -104,18 +104,19 @@ public final class BHFS {
             }
             
             ++l;
-            open.get(l + 1).clear();
-            closed.get(l).clear();
+            open.addLast(new DoublePriorityBinaryHeap<>());
+            closed.addLast(new HashSet<>());
+//            closed.get(l).clear();
         }
         
         return List.of();
     }
     
-    public List<GridGraph.Cell> search(GridGraph graph,
-                                        GridGraph.Cell source,
-                                        GridGraph.Cell target,
-                                        HeuristicFunction h,
-                                        boolean diagonal) {
+    public static List<GridGraph.Cell> search(GridGraph graph,
+                                              GridGraph.Cell source,
+                                              GridGraph.Cell target,
+                                              HeuristicFunction h,
+                                              boolean diagonal) {
         
         int u = (int)(h.estimate(source, target) / 2.0);
         

@@ -8,7 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>26</maven.compiler.release>
-        <exec.mainClass>io.github.coderodde.graph.pathfinding.bnfs.BHFS</exec.mainClass>
+        <exec.mainClass>io.github.coderodde.graph.pathfinding.bnfs.BFHS</exec.mainClass>
     </properties>
     <name>BFHS.java</name>
 </project>

@@ -15,10 +15,11 @@ public final class BiBFS {
     
     private BiBFS() {}
     
-    public List<GridGraph.Cell> search(GridGraph graph, 
-                                       GridGraph.Cell source,
-                                       GridGraph.Cell target,
-                                       boolean allowDiagonals) {
+    public static List<GridGraph.Cell> search(GridGraph graph, 
+                                              GridGraph.Cell source,
+                                              GridGraph.Cell target,
+                                              boolean allowDiagonals) {
+        
         Deque<GridGraph.Cell> frontierA              = new ArrayDeque<>();
         Deque<GridGraph.Cell> frontierB              = new ArrayDeque<>();
         Map<GridGraph.Cell, GridGraph.Cell> parentsA = new HashMap<>();
@@ -69,7 +70,7 @@ public final class BiBFS {
                     }
                 }
 
-                if (parentsB.containsKey(current)) {
+                if (parentsA.containsKey(current)) {
                     return tracebackPath(current,
                                          parentsA, 
                                          parentsB);
@@ -80,7 +81,7 @@ public final class BiBFS {
         return List.of();
     }
     
-    static List<GridGraph.Cell>
+    private static List<GridGraph.Cell>
         tracebackPath(GridGraph.Cell middle,
                       Map<GridGraph.Cell, GridGraph.Cell> parentsA,
                       Map<GridGraph.Cell, GridGraph.Cell> parentsB) {

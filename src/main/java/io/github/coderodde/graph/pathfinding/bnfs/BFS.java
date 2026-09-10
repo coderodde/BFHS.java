@@ -49,9 +49,10 @@ public final class BFS {
         return List.of();
     }
     
-    static List<GridGraph.Cell> tracebackPath(GridGraph.Cell target,
-                                              Map<GridGraph.Cell, 
-                                                  GridGraph.Cell> parents) {
+    private static List<GridGraph.Cell> 
+        tracebackPath(GridGraph.Cell target,
+                      Map<GridGraph.Cell, GridGraph.Cell> parents) {
+            
         List<GridGraph.Cell> path = new ArrayList<>();
         GridGraph.Cell current    = target;
         
