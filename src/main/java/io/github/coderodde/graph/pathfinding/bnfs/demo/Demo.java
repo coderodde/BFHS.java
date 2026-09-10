@@ -54,7 +54,7 @@ public final class Demo {
         System.out.printf("BFHS in  %d ms.%n", System.currentTimeMillis() - t);
         
         boolean pathsEquivalent = 
-                pathsAreEquivalent(GRAPH, path1, path2, false)
+                pathsAreEquivalent(GRAPH, path1, path2, false) 
              && pathsAreEquivalent(GRAPH, path1, path3, false);
         
         System.out.printf("Algorithms agree: %b.%n", pathsEquivalent);
@@ -102,15 +102,15 @@ public final class Demo {
             
             List<GridGraph.Cell> neighboursOfA = 
                 allowDiagonals 
-                    ? a.getAllNeighbours(graph)
+                    ? a.getAllNeighbours  (graph)
                     : a.getBasicNeighbours(graph);
             
             if (!neighboursOfA.contains(b)) {
-                return false;
+                return true;
             }
         }
         
-        return true;
+        return false;
     }
     
     private static void setRandomWalls() {
