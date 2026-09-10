@@ -14,7 +14,7 @@ import java.util.Random;
  */
 public final class Demo {
     
-    private static final Random RANDOM = new Random(10L);
+    private static final Random RANDOM = new Random();
     private static final GridGraph GRAPH = new GridGraph(1000); // 1000 x 1000
     private static final int WALLS = 50_000;
     
@@ -30,7 +30,7 @@ public final class Demo {
                                                 source,
                                                 target);
         
-        System.out.printf("BFS in   %d ms.%n", System.currentTimeMillis() - t);
+        System.out.printf("BFS   in %d ms.%n", System.currentTimeMillis() - t);
         
         t = System.currentTimeMillis();
         
@@ -47,9 +47,9 @@ public final class Demo {
                         source,
                         target,
                         new ManhattanHeuristicFunction(),
-                        3000);
+                        2000);
         
-        System.out.printf("BFHS in  %d ms.%n", System.currentTimeMillis() - t);
+        System.out.printf("BFHS  in %d ms.%n", System.currentTimeMillis() - t);
         
         boolean pathsEquivalent = 
                 pathsAreEquivalent(GRAPH, path1, path2) 
