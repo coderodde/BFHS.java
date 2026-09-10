@@ -80,6 +80,14 @@ public final class GridGraph {
             return cellType;
         }
         
+        public boolean isPassable() {
+            return cellType == CellType.PASSABLE;
+        }
+        
+        public boolean isBlocked() {
+            return cellType == CellType.BLOCKED;
+        }
+        
         public void setCellType(CellType cellType) {
             this.cellType = cellType;
         }
@@ -98,55 +106,43 @@ public final class GridGraph {
             return 32 * Integer.hashCode(x) + Integer.hashCode(y);
         }
 
-        public List<Cell> getBasicNeighbours(GridGraph gridGraph) {
+        public List<Cell> getNeighbours(GridGraph gridGraph) {
             List<Cell> neighbours = new ArrayList<>(4);
-
+            Cell cell;
+            
             if (x > 0) {
-                neighbours.addLast(gridGraph.getCell(x - 1, y));
+                cell = gridGraph.getCell(x - 1, y);
+                
+                if (cell.isPassable()) {
+                    neighbours.addLast(cell);
+                }
             }
 
             if (x < gridGraph.width() - 1) {
-                neighbours.addLast(gridGraph.getCell(x + 1, y));
+                cell = gridGraph.getCell(x + 1, y);
+                
+                if (cell.isPassable()) {
+                    neighbours.addLast(cell);
+                }
             }
 
             if (y > 0) {
-                neighbours.addLast(gridGraph.getCell(x, y - 1));
+                cell = gridGraph.getCell(x, y - 1);
+                
+                if (cell.isPassable()) {
+                    neighbours.addLast(cell);
+                }
             }
 
             if (y < gridGraph.height() - 1) {
-                neighbours.addLast(gridGraph.getCell(x, y + 1));
+                cell = gridGraph.getCell(x, y + 1);
+                
+                if (cell.isPassable()) {
+                    neighbours.addLast(cell);
+                }
             }
 
             return neighbours;
-        }
-
-        public List<Cell> getDiagonalNeighbours(GridGraph gridGraph) {
-            List<Cell> neighbours = new ArrayList<>(4);
-
-            if (x > 0 && y > 0) {
-                neighbours.addLast(gridGraph.getCell(x - 1, y - 1));
-            }
-
-            if (x > 0 && y < gridGraph.height() - 1) {
-                neighbours.addLast(gridGraph.getCell(x - 1, y + 1));
-            }
-
-            if (x < gridGraph.width() - 1 && y > 0) {
-                neighbours.addLast(gridGraph.getCell(x + 1, y - 1));
-            }
-
-            if (x < gridGraph.width() - 1 && y < gridGraph.height() - 1) {
-                neighbours.addLast(gridGraph.getCell(x + 1, y + 1));
-            }
-
-            return neighbours;
-        }
-
-        public List<Cell> getAllNeighbours(GridGraph gridGraph) {
-            List<Cell> basicNeighbours    = getBasicNeighbours    (gridGraph);
-            List<Cell> diagonalNeighbours = getDiagonalNeighbours (gridGraph);
-            basicNeighbours.addAll(diagonalNeighbours);
-            return basicNeighbours;
         }
         
         @Override

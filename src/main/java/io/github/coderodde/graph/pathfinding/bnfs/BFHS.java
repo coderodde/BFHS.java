@@ -20,7 +20,6 @@ public final class BFHS {
                                               GridGraph.Cell source,
                                               GridGraph.Cell target,
                                               HeuristicFunction h,
-                                              boolean diagonal,
                                               int u) {
         checkU(u);
         
@@ -59,7 +58,6 @@ public final class BFHS {
                         l,         // The level/depth counter.
                         relay,     // The index of the relay layer.
                         u,         // The upper bound on the path.
-                        diagonal,  // If true, diagonal movements allowed.
                         open,      // The open set stack.
                         closed,    // The closed set stack.
                         g,         // Maps each node to cost.
@@ -79,7 +77,6 @@ public final class BFHS {
                                        source,
                                        middle, 
                                        h, 
-                                       diagonal, 
                                        g.get(middle));
                     }
                     
@@ -90,7 +87,6 @@ public final class BFHS {
                                        middle, 
                                        sol,
                                        h, 
-                                       diagonal, 
                                        g.get(sol) - g.get(middle));
                     }
                     
@@ -115,8 +111,7 @@ public final class BFHS {
     public static List<GridGraph.Cell> search(GridGraph graph,
                                               GridGraph.Cell source,
                                               GridGraph.Cell target,
-                                              HeuristicFunction h,
-                                              boolean diagonal) {
+                                              HeuristicFunction h) {
         
         int u = (int)(h.estimate(source, target) / 2.0);
         
@@ -124,7 +119,6 @@ public final class BFHS {
                       source, 
                       target, 
                       h, 
-                      diagonal,
                       u);
     }
     
@@ -136,16 +130,13 @@ public final class BFHS {
                     int l,
                     int relay,
                     int u,
-                    boolean diagonal,
                     List<DoublePriorityBinaryHeap<GridGraph.Cell>> open,
                     List<Set<GridGraph.Cell>> closed,
                     Map<GridGraph.Cell, Integer> g,
                     Map<GridGraph.Cell, GridGraph.Cell> ancestors,
                     HeuristicFunction h) {
              
-        List<GridGraph.Cell> successors = 
-            diagonal ? n.getBasicNeighbours (graph) 
-                     : n.getAllNeighbours   (graph);
+        List<GridGraph.Cell> successors = n.getNeighbours(graph);
         
         for (GridGraph.Cell neighbour : successors) {
             if (g.get(n) + 1 + h.estimate(n, target) > u) {

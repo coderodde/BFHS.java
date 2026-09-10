@@ -28,8 +28,7 @@ public final class Demo {
         
         List<GridGraph.Cell> path1 = BFS.search(GRAPH, 
                                                 source,
-                                                target, 
-                                                false); // No diagonal.
+                                                target);
         
         System.out.printf("BFS in   %d ms.%n", System.currentTimeMillis() - t);
         
@@ -37,8 +36,7 @@ public final class Demo {
         
         List<GridGraph.Cell> path2 = BiBFS.search(GRAPH, 
                                                   source, 
-                                                  target, 
-                                                  false);
+                                                  target);
         
         System.out.printf("BiBFS in %d ms.%n", System.currentTimeMillis() - t);
         
@@ -48,8 +46,7 @@ public final class Demo {
             BFHS.search(GRAPH,
                         source,
                         target,
-                        new ManhattanHeuristicFunction(), 
-                        false);
+                        new ManhattanHeuristicFunction());
         
         System.out.printf("BFHS in  %d ms.%n", System.currentTimeMillis() - t);
         
@@ -81,11 +78,11 @@ public final class Demo {
             return false;
         }
         
-        if (pathIsBroken(graph, path1, allowDiagonals)) {
+        if (pathIsBroken(graph, path1)) {
             return false;
         }
         
-        if (pathIsBroken(graph, path2, allowDiagonals)) {
+        if (pathIsBroken(graph, path2)) {
             return false;
         }
         
@@ -93,17 +90,13 @@ public final class Demo {
     }
         
     private static boolean pathIsBroken(GridGraph graph, 
-                                        List<GridGraph.Cell> path,
-                                        boolean allowDiagonals) {
+                                        List<GridGraph.Cell> path) {
         
         for (int i = 0; i < path.size() - 1; ++i) {
             GridGraph.Cell a = path.get(i);
             GridGraph.Cell b = path.get(i + 1);
             
-            List<GridGraph.Cell> neighboursOfA = 
-                allowDiagonals 
-                    ? a.getAllNeighbours  (graph)
-                    : a.getBasicNeighbours(graph);
+            List<GridGraph.Cell> neighboursOfA = a.getNeighbours(graph);
             
             if (!neighboursOfA.contains(b)) {
                 return true;

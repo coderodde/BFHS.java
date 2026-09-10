@@ -17,8 +17,7 @@ public final class BiBFS {
     
     public static List<GridGraph.Cell> search(GridGraph graph, 
                                               GridGraph.Cell source,
-                                              GridGraph.Cell target,
-                                              boolean allowDiagonals) {
+                                              GridGraph.Cell target) {
         
         Deque<GridGraph.Cell> frontierA              = new ArrayDeque<>();
         Deque<GridGraph.Cell> frontierB              = new ArrayDeque<>();
@@ -38,11 +37,8 @@ public final class BiBFS {
             if (traversedA <= traversedB) {
                 GridGraph.Cell current = frontierA.removeFirst();
 
-                List<GridGraph.Cell> successors = 
-                    allowDiagonals 
-                        ? current.getAllNeighbours   (graph) 
-                        : current.getBasicNeighbours (graph);
-
+                List<GridGraph.Cell> successors = current.getNeighbours(graph);
+                
                 for (GridGraph.Cell successor : successors) {
                     if (!parentsA.containsKey(successor)) {
                          parentsA.put(successor, current);
@@ -58,10 +54,7 @@ public final class BiBFS {
             } else {
                 GridGraph.Cell current = frontierB.removeFirst();
 
-                List<GridGraph.Cell> successors = 
-                    allowDiagonals 
-                        ? current.getAllNeighbours   (graph) 
-                        : current.getBasicNeighbours (graph);
+                List<GridGraph.Cell> successors = current.getNeighbours(graph);
 
                 for (GridGraph.Cell successor : successors) {
                     if (!parentsB.containsKey(successor)) {

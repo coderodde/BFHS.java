@@ -17,8 +17,7 @@ public final class BFS {
     
     public static List<GridGraph.Cell> search(GridGraph graph, 
                                               GridGraph.Cell source,
-                                              GridGraph.Cell target,
-                                              boolean allowDiagonals) {
+                                              GridGraph.Cell target) {
         
         Deque<GridGraph.Cell> frontier              = new ArrayDeque<>();
         Map<GridGraph.Cell, GridGraph.Cell> parents = new HashMap<>();
@@ -33,10 +32,7 @@ public final class BFS {
                 return tracebackPath(target, parents);
             }
             
-            List<GridGraph.Cell> successors = 
-                allowDiagonals 
-                    ? current.getAllNeighbours   (graph) 
-                    : current.getBasicNeighbours (graph);
+            List<GridGraph.Cell> successors = current.getNeighbours(graph);
             
             for (GridGraph.Cell successor : successors) {
                 if (!parents.containsKey(successor)) {
