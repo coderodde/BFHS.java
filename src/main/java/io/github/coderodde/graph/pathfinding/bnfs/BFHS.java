@@ -21,6 +21,12 @@ public final class BFHS {
                                               GridGraph.Cell target,
                                               HeuristicFunction h,
                                               int u) {
+        
+        if (source.equals(target)) {
+            System.out.println("fuck");
+            return List.of(target);
+        }
+        
         checkU(u);
         
         Map<GridGraph.Cell, Integer> g                = new HashMap<>();
@@ -71,13 +77,17 @@ public final class BFHS {
                     GridGraph.Cell middle = ancestors.get(sol);
                     
                     if (g.get(middle) == 1) {
-                        path0 = List.of(source, middle);
+                        path0 = new ArrayList<>(List.of(source, middle));
                     } else {
-                        path0 = search(graph, 
-                                       source,
-                                       middle, 
-                                       h, 
-                                       g.get(middle));
+                        if (g.get(middle) == 0) {
+                            System.out.println("yeah");
+                        }
+                        
+                        path0 = new ArrayList<>(search(graph, 
+                                                       source,
+                                                       middle, 
+                                                       h, 
+                                                       g.get(middle)));
                     }
                     
                     if (g.get(sol) - g.get(middle) == 1) {
@@ -90,7 +100,7 @@ public final class BFHS {
                                        g.get(sol) - g.get(middle));
                     }
                     
-                    path0.addAll(path1);
+                    path0.addAll(path1.subList(1, path1.size()));
                     return path0;
                 }
             }
@@ -102,24 +112,9 @@ public final class BFHS {
             ++l;
             open.addLast(new DoublePriorityBinaryHeap<>());
             closed.addLast(new HashSet<>());
-//            closed.get(l).clear();
         }
         
         return List.of();
-    }
-    
-    public static List<GridGraph.Cell> search(GridGraph graph,
-                                              GridGraph.Cell source,
-                                              GridGraph.Cell target,
-                                              HeuristicFunction h) {
-        
-        int u = (int)(h.estimate(source, target) / 2.0);
-        
-        return search(graph, 
-                      source, 
-                      target, 
-                      h, 
-                      u);
     }
     
     private static GridGraph.Cell
@@ -139,12 +134,17 @@ public final class BFHS {
         List<GridGraph.Cell> successors = n.getNeighbours(graph);
         
         for (GridGraph.Cell neighbour : successors) {
-            if (g.get(n) + 1 + h.estimate(n, target) > u) {
+            if (g.get(n) + 1 + h.estimate(neighbour, target) > u) {
                 continue;
             }
             
-            if (closed.get(l - 1).contains(neighbour) 
-                    || closed.get(l).contains(neighbour)
+            if (l > 0) {
+                if (closed.get(l - 1).contains(neighbour)) {
+                    continue;
+                }
+            }
+            
+            if (closed.get(l).contains(neighbour)
                     || open.get(l).containsDatum(neighbour)
                     || open.get(l + 1).containsDatum(neighbour)) {
                 continue;

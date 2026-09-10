@@ -46,23 +46,27 @@ public final class Demo {
             BFHS.search(GRAPH,
                         source,
                         target,
-                        new ManhattanHeuristicFunction());
+                        new ManhattanHeuristicFunction(),
+                        3000);
         
         System.out.printf("BFHS in  %d ms.%n", System.currentTimeMillis() - t);
         
         boolean pathsEquivalent = 
-                pathsAreEquivalent(GRAPH, path1, path2, false) 
-             && pathsAreEquivalent(GRAPH, path1, path3, false);
+                pathsAreEquivalent(GRAPH, path1, path2) 
+             && pathsAreEquivalent(GRAPH, path1, path3);
         
         System.out.printf("Algorithms agree: %b.%n", pathsEquivalent);
+        
+        System.out.println(path1.size());
+        System.out.println(path2.size());
+        System.out.println(path3.size());
     }
     
     private static boolean 
         pathsAreEquivalent(
             GridGraph graph, 
             List<GridGraph.Cell> path1, 
-            List<GridGraph.Cell> path2,
-            boolean allowDiagonals) {
+            List<GridGraph.Cell> path2) {
         
         if (path1.size() != path2.size()) {
             return false;
@@ -82,11 +86,7 @@ public final class Demo {
             return false;
         }
         
-        if (pathIsBroken(graph, path2)) {
-            return false;
-        }
-        
-        return true;
+        return !pathIsBroken(graph, path2);
     }
         
     private static boolean pathIsBroken(GridGraph graph, 
