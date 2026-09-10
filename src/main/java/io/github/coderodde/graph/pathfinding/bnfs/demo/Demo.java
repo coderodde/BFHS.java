@@ -19,6 +19,15 @@ public final class Demo {
     private static final int WALLS = 50_000;
     
     public static void main(String[] args) {
+        demoSimpleGraph();
+//        demoGridGraph();
+    }
+    
+    private static void demoSimpleGraph() {
+        
+    }
+    
+    private static void demoGridGraph() {
         setRandomWalls();
         
         GridGraph.Cell source = GRAPH.getCell(10, 10);
