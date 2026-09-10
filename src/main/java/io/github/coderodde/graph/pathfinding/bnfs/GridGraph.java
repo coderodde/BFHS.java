@@ -148,5 +148,14 @@ public final class GridGraph {
             basicNeighbours.addAll(diagonalNeighbours);
             return basicNeighbours;
         }
+        
+        @Override
+        public String toString() {
+            return "[x = %d, y = %d, passable = %b]"
+                    .formatted(
+                            x, 
+                            y,
+                            cellType == CellType.PASSABLE);
+        }
     }
 }
