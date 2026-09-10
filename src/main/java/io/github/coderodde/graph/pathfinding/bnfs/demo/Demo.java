@@ -33,8 +33,6 @@ public final class Demo {
         
         System.out.printf("BFS in   %d ms.%n", System.currentTimeMillis() - t);
         
-        System.out.println(path1);
-        
         t = System.currentTimeMillis();
         
         List<GridGraph.Cell> path2 = BiBFS.search(GRAPH, 
@@ -55,7 +53,64 @@ public final class Demo {
         
         System.out.printf("BFHS in  %d ms.%n", System.currentTimeMillis() - t);
         
+        boolean pathsEquivalent = 
+                pathsAreEquivalent(GRAPH, path1, path2, false)
+             && pathsAreEquivalent(GRAPH, path1, path3, false);
         
+        System.out.printf("Algorithms agree: %b.%n", pathsEquivalent);
+    }
+    
+    private static boolean 
+        pathsAreEquivalent(
+            GridGraph graph, 
+            List<GridGraph.Cell> path1, 
+            List<GridGraph.Cell> path2,
+            boolean allowDiagonals) {
+        
+        if (path1.size() != path2.size()) {
+            return false;
+        }
+        
+        // Check sources:
+        if (!path1.getFirst().equals(path2.getFirst())) {
+            return false;
+        }
+        
+        // Check targets:
+        if (!path1.getLast().equals(path2.getLast())) {
+            return false;
+        }
+        
+        if (pathIsBroken(graph, path1, allowDiagonals)) {
+            return false;
+        }
+        
+        if (pathIsBroken(graph, path2, allowDiagonals)) {
+            return false;
+        }
+        
+        return true;
+    }
+        
+    private static boolean pathIsBroken(GridGraph graph, 
+                                        List<GridGraph.Cell> path,
+                                        boolean allowDiagonals) {
+        
+        for (int i = 0; i < path.size() - 1; ++i) {
+            GridGraph.Cell a = path.get(i);
+            GridGraph.Cell b = path.get(i + 1);
+            
+            List<GridGraph.Cell> neighboursOfA = 
+                allowDiagonals 
+                    ? a.getAllNeighbours(graph)
+                    : a.getBasicNeighbours(graph);
+            
+            if (!neighboursOfA.contains(b)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
     
     private static void setRandomWalls() {
