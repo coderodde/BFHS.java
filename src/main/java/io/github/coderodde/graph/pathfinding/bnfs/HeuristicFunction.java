@@ -1,7 +1,5 @@
 package io.github.coderodde.graph.pathfinding.bnfs;
 
-import io.github.coderodde.graph.pathfinding.bnfs.GridGraph.CellCoordinates;
-
 /**
  * This interface defines the API for grid graph heuristic functions.
  */
@@ -17,5 +15,5 @@ public sealed interface HeuristicFunction permits ManhattanHeuristicFunction {
      * 
      * @return the shortest path estimate.
      */
-    public double estimate(CellCoordinates a, CellCoordinates b);
+    public double estimate(GridGraph.Cell a, GridGraph.Cell b);
 }

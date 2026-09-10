@@ -1,7 +1,6 @@
 package io.github.coderodde.graph.pathfinding.bnfs;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -9,18 +8,24 @@ import java.util.List;
  */
 public final class GridGraph {
     
-    private static final boolean PASSABLE = true;
-    private static final boolean BLOCKED  = false;
+    public enum CellType {
+        PASSABLE,
+        BLOCKED;
+    }
     
-    private final boolean[][] grid;
+    private final Cell[][] grid;
     
     public GridGraph(int width, int height) {
-        grid = new boolean[height][];
+        grid = new Cell[height][];
         
-        for (int i = 0; i < height; ++i) {
-            boolean[] row = new boolean[width];
-            Arrays.fill(row, PASSABLE);
-            grid[i] = row;
+        for (int y = 0; y < height; ++y) {
+            Cell[] row = new Cell[width];
+            
+            for (int x = 0; x < width; ++x) {
+                row[x] = new Cell(x, y, CellType.PASSABLE);
+            }
+            
+            grid[y] = row;
         }
     }
     
@@ -36,74 +41,52 @@ public final class GridGraph {
         return grid.length;
     }
     
+    public Cell getCell(int x, int y) {
+        return grid[y][x];
+    }
+    
+    public void setCellType(int x, int y, CellType cellType) {
+        grid[y][x].setCellType(cellType);
+    }
     public boolean isPassable(int x, int y) {
-        return grid[y][x] == PASSABLE;
+        return grid[y][x].getCellType() == CellType.PASSABLE;
     }
     
     public boolean isBlocked(int x, int y) {
-        return grid[y][x] == BLOCKED;
+        return grid[y][x].getCellType() == CellType.BLOCKED;
     }
     
-    public void setCell(int x, int y, boolean passable) {
-        grid[y][x] = passable;
-    }
+    public static final class Cell {
+        
+        private final int x;
+        private final int y;
+        private CellType cellType;
+        
+        public Cell(int x, int y, CellType cellType) {
+            this.x = x;
+            this.y = y;
+            this.cellType = cellType;
+        }
+        
+        public int x() {
+            return x;
+        }
+        
+        public int y() {
+            return y;
+        }
+        
+        public CellType getCellType() {
+            return cellType;
+        }
+        
+        public void setCellType(CellType cellType) {
+            this.cellType = cellType;
+        }
     
-    public List<CellCoordinates> getBasicNeighbours(int x, int y) {
-        List<CellCoordinates> neighbours = new ArrayList<>(4);
-        
-        if (x > 0) {
-            neighbours.addLast(new CellCoordinates(x - 1, y));
-        }
-        
-        if (x < width() - 1) {
-            neighbours.addLast(new CellCoordinates(x + 1, y));
-        }
-        
-        if (y > 0) {
-            neighbours.addLast(new CellCoordinates(x, y - 1));
-        }
-        
-        if (y < height() - 1) {
-            neighbours.addLast(new CellCoordinates(x, y + 1));
-        }
-        
-        return neighbours;
-    }
-    
-    public List<CellCoordinates> getDiagonalNeighbours(int x, int y) {
-        List<CellCoordinates> neighbours = new ArrayList<>(4);
-        
-        if (x > 0 && y > 0) {
-            neighbours.addLast(new CellCoordinates(x - 1, y - 1));
-        }
-        
-        if (x > 0 && y < height() - 1) {
-            neighbours.addLast(new CellCoordinates(x - 1, y + 1));
-        }
-        
-        if (x < width() - 1 && y > 0) {
-            neighbours.addLast(new CellCoordinates(x + 1, y - 1));
-        }
-        
-        if (x < width() - 1 && y < height() - 1) {
-            neighbours.addLast(new CellCoordinates(x + 1, y + 1));
-        }
-        
-        return neighbours;
-    }
-    
-    public List<CellCoordinates> getAllNeighbours(int x, int y) {
-        List<CellCoordinates> basicNeighbours    = getBasicNeighbours(x, y);
-        List<CellCoordinates> diagonalNeighbours = getDiagonalNeighbours(x, y);
-        basicNeighbours.addAll(diagonalNeighbours);
-        return basicNeighbours;
-    }
-    
-    public static final record CellCoordinates(int x, int y) {
-        
         @Override
         public boolean equals(Object o) {
-            if (o instanceof CellCoordinates cc) {
+            if (o instanceof Cell cc) {
                 return cc.x == x && cc.y == y;
             } else {
                 return false;
@@ -113,6 +96,57 @@ public final class GridGraph {
         @Override
         public int hashCode() {
             return 32 * Integer.hashCode(x) + Integer.hashCode(y);
+        }
+
+        public List<Cell> getBasicNeighbours(GridGraph gridGraph) {
+            List<Cell> neighbours = new ArrayList<>(4);
+
+            if (x > 0) {
+                neighbours.addLast(gridGraph.getCell(x - 1, y));
+            }
+
+            if (x < gridGraph.width() - 1) {
+                neighbours.addLast(gridGraph.getCell(x + 1, y));
+            }
+
+            if (y > 0) {
+                neighbours.addLast(gridGraph.getCell(x, y - 1));
+            }
+
+            if (y < gridGraph.height() - 1) {
+                neighbours.addLast(gridGraph.getCell(x, y + 1));
+            }
+
+            return neighbours;
+        }
+
+        public List<Cell> getDiagonalNeighbours(GridGraph gridGraph) {
+            List<Cell> neighbours = new ArrayList<>(4);
+
+            if (x > 0 && y > 0) {
+                neighbours.addLast(gridGraph.getCell(x - 1, y - 1));
+            }
+
+            if (x > 0 && y < gridGraph.height() - 1) {
+                neighbours.addLast(gridGraph.getCell(x - 1, y + 1));
+            }
+
+            if (x < gridGraph.width() - 1 && y > 0) {
+                neighbours.addLast(gridGraph.getCell(x + 1, y - 1));
+            }
+
+            if (x < gridGraph.width() - 1 && y < gridGraph.height() - 1) {
+                neighbours.addLast(gridGraph.getCell(x + 1, y + 1));
+            }
+
+            return neighbours;
+        }
+
+        public List<Cell> getAllNeighbours(GridGraph gridGraph) {
+            List<Cell> basicNeighbours    = getBasicNeighbours    (gridGraph);
+            List<Cell> diagonalNeighbours = getDiagonalNeighbours (gridGraph);
+            basicNeighbours.addAll(diagonalNeighbours);
+            return basicNeighbours;
         }
     }
 }

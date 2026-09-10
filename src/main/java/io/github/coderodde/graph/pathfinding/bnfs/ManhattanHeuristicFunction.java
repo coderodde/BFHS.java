@@ -1,7 +1,5 @@
 package io.github.coderodde.graph.pathfinding.bnfs;
 
-import io.github.coderodde.graph.pathfinding.bnfs.GridGraph.CellCoordinates;
-
 /**
  * This class implements the Manhattan heuristic function.
  */
@@ -17,7 +15,7 @@ public final class ManhattanHeuristicFunction implements HeuristicFunction {
      * @return the Manhattan distance between the two cells. 
      */
     @Override
-    public double estimate(CellCoordinates a, CellCoordinates b) {
+    public double estimate(GridGraph.Cell a, GridGraph.Cell b) {
         return Math.abs(a.x() - b.x()) + Math.abs(a.y() - b.y());
     }
 }

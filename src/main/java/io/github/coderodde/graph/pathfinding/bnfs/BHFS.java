@@ -1,6 +1,5 @@
 package io.github.coderodde.graph.pathfinding.bnfs;
 
-import io.github.coderodde.graph.pathfinding.bnfs.GridGraph.CellCoordinates;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,20 +16,22 @@ public final class BHFS {
 
     private BHFS() {}
     
-    public List<CellCoordinates> search(GridGraph graph,
-                                        CellCoordinates source,
-                                        CellCoordinates target,
-                                        HeuristicFunction h,
-                                        boolean diagonal,
-                                        int u) {
+    public List<GridGraph.Cell> search(GridGraph graph,
+                                       GridGraph.Cell source,
+                                       GridGraph.Cell target,
+                                       HeuristicFunction h,
+                                       boolean diagonal,
+                                       int u) {
         
-        Map<CellCoordinates, Integer> g                 = new HashMap<>();
-        Map<CellCoordinates, CellCoordinates> ancestors = new HashMap<>();
+        checkU(u);
         
-        List<DoublePriorityBinaryHeap<CellCoordinates>> open = 
+        Map<GridGraph.Cell, Integer> g                = new HashMap<>();
+        Map<GridGraph.Cell, GridGraph.Cell> ancestors = new HashMap<>();
+        
+        List<DoublePriorityBinaryHeap<GridGraph.Cell>> open = 
             new ArrayList<>();
         
-        List<Set<CellCoordinates>> closed = new ArrayList<>();
+        List<Set<GridGraph.Cell>> closed = new ArrayList<>();
         
         open.addLast(new DoublePriorityBinaryHeap<>());
         open.addLast(new DoublePriorityBinaryHeap<>());
@@ -46,27 +47,30 @@ public final class BHFS {
         
         while (!open.get(l).isEmpty() || !open.get(l + 1).isEmpty()) {
             while (!open.get(l).isEmpty()) {
-                CellCoordinates n = open.get(l).extractTop();
-                closed.get(l).add(n);
-                CellCoordinates sol = expandNode(graph, 
-                                                 n,
-                                                 source,
-                                                 target, 
-                                                 l,
-                                                 relay, 
-                                                 u, 
-                                                 diagonal, 
-                                                 open, 
-                                                 closed, 
-                                                 g, 
-                                                 ancestors, 
-                                                 h);
+                GridGraph.Cell n = open.get(l).extractTop();
                 
-                List<CellCoordinates> path0;
-                List<CellCoordinates> path1;
+                closed.get(l).add(n);
+                
+                GridGraph.Cell sol = 
+                    expandNode(graph, 
+                        n,         // Node to expand.
+                        source,    // The source node
+                        target,    // The target node.e
+                        l,         // The level/depth counter.
+                        relay,     // The index of the relay layer.
+                        u,         // The upper bound on the path.
+                        diagonal,  // If true, diagonal movements allowed.
+                        open,      // The open set stack.
+                        closed,    // The closed set stack.
+                        g,         // Maps each node to cost.
+                        ancestors, // Maps each node to ancestor.
+                        h);        // The heuristic function.
+                
+                List<GridGraph.Cell> path0;
+                List<GridGraph.Cell> path1;
                 
                 if (sol != null) {
-                    CellCoordinates middle = ancestors.get(sol);
+                    GridGraph.Cell middle = ancestors.get(sol);
                     
                     if (g.get(middle) == 1) {
                         path0 = List.of(source, middle);
@@ -96,7 +100,7 @@ public final class BHFS {
             }
             
             if (1 < l && l <= relay || l > relay + 1) {
-                
+                closed.get(l - 1).clear();
             }
             
             ++l;
@@ -107,27 +111,42 @@ public final class BHFS {
         return List.of();
     }
     
-    private static CellCoordinates
+    public List<GridGraph.Cell> search(GridGraph graph,
+                                        GridGraph.Cell source,
+                                        GridGraph.Cell target,
+                                        HeuristicFunction h,
+                                        boolean diagonal) {
+        
+        int u = (int)(h.estimate(source, target) / 2.0);
+        
+        return search(graph, 
+                      source, 
+                      target, 
+                      h, 
+                      diagonal,
+                      u);
+    }
+    
+    private static GridGraph.Cell
          expandNode(GridGraph graph,
-                    CellCoordinates n,
-                    CellCoordinates source,
-                    CellCoordinates target, 
+                    GridGraph.Cell n,
+                    GridGraph.Cell source,
+                    GridGraph.Cell target, 
                     int l,
                     int relay,
                     int u,
                     boolean diagonal,
-                    List<DoublePriorityBinaryHeap<CellCoordinates>> open,
-                    List<Set<CellCoordinates>> closed,
-                    Map<CellCoordinates, Integer> g,
-                    Map<CellCoordinates, CellCoordinates> ancestors,
+                    List<DoublePriorityBinaryHeap<GridGraph.Cell>> open,
+                    List<Set<GridGraph.Cell>> closed,
+                    Map<GridGraph.Cell, Integer> g,
+                    Map<GridGraph.Cell, GridGraph.Cell> ancestors,
                     HeuristicFunction h) {
              
-        List<CellCoordinates> successors = 
-            diagonal ? 
-                graph.getAllNeighbours  (n.x(), n.y()) : 
-                graph.getBasicNeighbours(n.x(), n.y());       
+        List<GridGraph.Cell> successors = 
+            diagonal ? n.getBasicNeighbours (graph) 
+                     : n.getAllNeighbours   (graph);
         
-        for (CellCoordinates neighbour : successors) {
+        for (GridGraph.Cell neighbour : successors) {
             if (g.get(n) + 1 + h.estimate(n, target) > u) {
                 continue;
             }
@@ -159,5 +178,11 @@ public final class BHFS {
         }
         
         return null;
+    }
+         
+    private static void checkU(int u) {
+        if (u < 1) {
+            throw new IllegalArgumentException("u(%d) < 1".formatted(u));
+        }
     }
 }
