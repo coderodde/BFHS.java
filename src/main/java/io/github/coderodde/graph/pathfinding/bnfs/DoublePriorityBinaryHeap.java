@@ -39,6 +39,7 @@ public final class DoublePriorityBinaryHeap<T> {
         BinaryHeapEntry(T datum,
                         double priority, 
                         int index) {
+            
             this.datum    = datum;
             this.priority = priority;
             this.index    = index;

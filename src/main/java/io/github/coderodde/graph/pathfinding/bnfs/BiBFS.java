@@ -16,12 +16,33 @@ public final class BiBFS {
     
     private BiBFS() {}
     
+    /**
+     * Searches for the shortest path with no memory usage statistics.
+     * 
+     * @param graph  the graph to search in.
+     * @param source the source cell.
+     * @param target the target cell.
+     * 
+     * @return a shortest path if target cell is reachable from the source.
+     */
     public static GridGraphPathData search(GridGraph graph, 
                                            GridGraph.Cell source,
                                            GridGraph.Cell target) {
         return search(graph, source, target, false);
     }
     
+    /**
+     * Searches for the shortest path with no memory usage statistics.
+     * 
+     * @param graph            the graph to search in.
+     * @param source           the source cell.
+     * @param target           the target cell.
+     * @param memoryStatistics indicates whether to gather memory usage
+     *                         statistics.
+     * 
+     * @return a shortest path if target cell is reachable from the source and
+     *         also the memory usage statistics.
+     */
     public static GridGraphPathData search(GridGraph graph, 
                                            GridGraph.Cell source,
                                            GridGraph.Cell target,

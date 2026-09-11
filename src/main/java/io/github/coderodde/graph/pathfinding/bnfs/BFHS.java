@@ -17,8 +17,19 @@ public final class BFHS {
 
     private BFHS() {}
     
-    
-    
+    /**
+     * Searches for a shortest path without computing the memory usage 
+     * statistics.
+     * 
+     * @param graph  the grid graph.
+     * @param source the source cell.
+     * @param target the target cell.
+     * @param h      the heuristic function.
+     * @param u      the path cost upper bound.
+     * 
+     * @return a shortest path if target is reachable from the source cell and
+     *         the path does not exceed the upper bound.
+     */
     public static GridGraphPathData search(GridGraph graph,
                                            GridGraph.Cell source,
                                            GridGraph.Cell target,
@@ -32,6 +43,22 @@ public final class BFHS {
                       false);
     }
     
+    /**
+     * Searches for a shortest path without computing the memory usage 
+     * statistics. This overloaded method provides an argument for choosing 
+     * whether to compute the memory usage statistics.
+     * 
+     * @param graph            the grid graph.
+     * @param source           the source cell.
+     * @param target           the target cell.
+     * @param h                the heuristic function.
+     * @param u                the path cost upper bound.
+     * @param memoryStatistics the flag indicating whether memory usage 
+     *                         statistics are needed.
+     * 
+     * @return a shortest path if target is reachable from the source cell and
+     *         the path does not exceed the upper bound.
+     */
     public static GridGraphPathData search(GridGraph graph,
                                            GridGraph.Cell source,
                                            GridGraph.Cell target,
@@ -47,6 +74,7 @@ public final class BFHS {
                       memoryStatistics);
     }
     
+    // Implements the actual search procedure.
     private static GridGraphPathData search(GridGraph graph,
                                             GridGraph.Cell source,
                                             GridGraph.Cell target,
@@ -56,6 +84,7 @@ public final class BFHS {
                                             boolean memoryStatistics)  {
         
         if (source.equals(target)) {
+            // We are forced to handle this special case differently.
             return new GridGraphPathData(List.of(source), 0L, 0L, 0L);
         }
         
