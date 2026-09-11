@@ -7,6 +7,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.openjdk.jol.info.GraphLayout;
 
 /**
  * This class implements the breadth-first search.
@@ -15,9 +16,11 @@ public final class BFS {
     
     private BFS() {}
     
-    public static List<GridGraph.Cell> search(GridGraph graph, 
-                                              GridGraph.Cell source,
-                                              GridGraph.Cell target) {
+    public static GridGraphPathData search(GridGraph graph, 
+                                           GridGraph.Cell source,
+                                           GridGraph.Cell target) {
+        
+        long t = System.currentTimeMillis();
         
         Deque<GridGraph.Cell> frontier              = new ArrayDeque<>();
         Map<GridGraph.Cell, GridGraph.Cell> parents = new HashMap<>();
@@ -29,7 +32,14 @@ public final class BFS {
             GridGraph.Cell current = frontier.removeFirst();
             
             if (current.equals(target)) {
-                return tracebackPath(target, parents);
+                List<GridGraph.Cell> path = tracebackPath(target, parents);
+                
+                long searchMillis = System.currentTimeMillis() - t;
+                
+                return getPathData(path,
+                                   frontier, 
+                                   parents,
+                                   searchMillis);
             }
             
             List<GridGraph.Cell> successors = current.getNeighbours(graph);
@@ -42,7 +52,34 @@ public final class BFS {
             }        
         }
         
-        return List.of();
+        long duration = System.currentTimeMillis() - t;
+        
+        return getPathData(List.of(),
+                           frontier, 
+                           parents, 
+                           duration);
+    }
+    
+    private static GridGraphPathData 
+        getPathData(List<GridGraph.Cell> path,
+                    Deque<GridGraph.Cell> frontier,
+                    Map<GridGraph.Cell, GridGraph.Cell> parents,
+                    long searchMillis) {
+            
+        long t = System.nanoTime();
+        
+        System.gc();
+        
+        long gcNanos = System.nanoTime() - t;
+        
+        GraphLayout layout = GraphLayout.parseInstance(frontier, parents);
+        
+        long totalBytes = layout.totalSize();
+        
+        return new GridGraphPathData(path,
+                                     searchMillis, 
+                                     totalBytes, 
+                                     gcNanos);
     }
     
     private static List<GridGraph.Cell> 

@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 public final class BFHSTest {
     
-    private final HeuristicFunction h = new ManhattanHeuristicFunction();
+    private final GridGraphHeuristicFunction h = new ManhattanHeuristicFunction();
     
     @Test
     public void optimalityTest1() {

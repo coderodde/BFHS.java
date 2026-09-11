@@ -3,7 +3,8 @@ package io.github.coderodde.graph.pathfinding.bnfs;
 /**
  * This interface defines the API for grid graph heuristic functions.
  */
-public sealed interface HeuristicFunction permits ManhattanHeuristicFunction {
+public sealed interface GridGraphHeuristicFunction 
+        permits ManhattanHeuristicFunction {
     
     /**
      * Estimates the distance between {@code a} and {@code b}. This estimate

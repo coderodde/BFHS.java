@@ -19,7 +19,7 @@ public final class BFHS {
     public static List<GridGraph.Cell> search(GridGraph graph,
                                               GridGraph.Cell source,
                                               GridGraph.Cell target,
-                                              HeuristicFunction h,
+                                              GridGraphHeuristicFunction h,
                                               int u) {
         
         if (source.equals(target)) {
@@ -129,7 +129,7 @@ public final class BFHS {
                     List<Set<GridGraph.Cell>> closed,
                     Map<GridGraph.Cell, Integer> g,
                     Map<GridGraph.Cell, GridGraph.Cell> ancestors,
-                    HeuristicFunction h) {
+                    GridGraphHeuristicFunction h) {
              
         List<GridGraph.Cell> successors = n.getNeighbours(graph);
         

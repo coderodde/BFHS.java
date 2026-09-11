@@ -4,6 +4,7 @@ import io.github.coderodde.graph.pathfinding.bnfs.BFS;
 import io.github.coderodde.graph.pathfinding.bnfs.BFHS;
 import io.github.coderodde.graph.pathfinding.bnfs.BiBFS;
 import io.github.coderodde.graph.pathfinding.bnfs.GridGraph;
+import io.github.coderodde.graph.pathfinding.bnfs.GridGraphPathData;
 import io.github.coderodde.graph.pathfinding.bnfs.ManhattanHeuristicFunction;
 import java.util.List;
 import java.util.Random;
@@ -19,8 +20,8 @@ public final class Demo {
     private static final int WALLS = 50_000;
     
     public static void main(String[] args) {
-        demoSimpleGraph();
-//        demoGridGraph();
+//        demoSimpleGraph();
+        demoGridGraph();
     }
     
     private static void demoSimpleGraph() {
@@ -30,16 +31,17 @@ public final class Demo {
     private static void demoGridGraph() {
         setRandomWalls();
         
-        GridGraph.Cell source = GRAPH.getCell(10, 10);
-        GridGraph.Cell target = GRAPH.getCell(1_000 - 10, 1_000 - 10);
+        GridGraph.Cell source = GRAPH.getCell(200, 200);
+        GridGraph.Cell target = GRAPH.getCell(1_000 - 200, 1_000 - 200);
         
         long t = System.currentTimeMillis();
         
-        List<GridGraph.Cell> path1 = BFS.search(GRAPH, 
-                                                source,
-                                                target);
+        GridGraphPathData data1 = BFS.search(GRAPH, 
+                                             source,
+                                             target);
         
         System.out.printf("BFS   in %d ms.%n", System.currentTimeMillis() - t);
+        System.out.println(data1);
         
         t = System.currentTimeMillis();
         
@@ -61,12 +63,12 @@ public final class Demo {
         System.out.printf("BFHS  in %d ms.%n", System.currentTimeMillis() - t);
         
         boolean pathsEquivalent = 
-                pathsAreEquivalent(GRAPH, path1, path2) 
-             && pathsAreEquivalent(GRAPH, path1, path3);
+                pathsAreEquivalent(GRAPH, data1.path(), path2) 
+             && pathsAreEquivalent(GRAPH, data1.path(), path3);
         
         System.out.printf("Algorithms agree: %b.%n", pathsEquivalent);
         
-        System.out.println(path1.size());
+        System.out.println(data1.path().size());
         System.out.println(path2.size());
         System.out.println(path3.size());
     }

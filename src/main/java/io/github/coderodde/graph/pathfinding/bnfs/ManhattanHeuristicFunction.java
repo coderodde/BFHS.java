@@ -3,7 +3,7 @@ package io.github.coderodde.graph.pathfinding.bnfs;
 /**
  * This class implements the Manhattan heuristic function.
  */
-public final class ManhattanHeuristicFunction implements HeuristicFunction {
+public final class ManhattanHeuristicFunction implements GridGraphHeuristicFunction {
 
     /**
      * Estimates the distance between {@code a} and {@code b} using Manhattan
