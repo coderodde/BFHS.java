@@ -20,15 +20,16 @@ public final class Demo {
     private static final int WALLS = 50_000;
     
     public static void main(String[] args) {
-//        demoSimpleGraph();
-        demoGridGraph();
+        boolean memoryStatistics = false;
+
+        if (args.length > 0 && args[0].equals("-m")) {
+            memoryStatistics = true;
+        }
+            
+        demoGridGraph(memoryStatistics);
     }
     
-    private static void demoSimpleGraph() {
-        
-    }
-    
-    private static void demoGridGraph() {
+    public static void demoGridGraph(boolean memoryStatistics) {
         setRandomWalls();
         
         GridGraph.Cell source = GRAPH.getCell(200, 200);
@@ -36,12 +37,16 @@ public final class Demo {
         
         GridGraphPathData data1 = BFS.search(GRAPH, 
                                              source,
-                                             target);
+                                             target,
+                                             memoryStatistics);
+        
         System.out.println("BFS:   " + data1);
         
         GridGraphPathData data2 = BiBFS.search(GRAPH, 
                                                source, 
-                                               target);
+                                               target,
+                                               memoryStatistics);
+        
         System.out.println("BiBFS: " + data2);
         
         GridGraphPathData data3 = 
@@ -49,7 +54,8 @@ public final class Demo {
                         source,
                         target,
                         new ManhattanHeuristicFunction(),
-                        2000);
+                        2000,
+                        memoryStatistics);
         
         System.out.println("BFHS:  " + data3);
         
@@ -60,8 +66,7 @@ public final class Demo {
         System.out.printf("Algorithms agree: %b.%n", pathsEquivalent);
     }
     
-    private static boolean 
-        pathsAreEquivalent(
+    static boolean pathsAreEquivalent(
             GridGraph graph, 
             List<GridGraph.Cell> path1, 
             List<GridGraph.Cell> path2) {

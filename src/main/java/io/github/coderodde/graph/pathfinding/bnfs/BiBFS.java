@@ -19,6 +19,13 @@ public final class BiBFS {
     public static GridGraphPathData search(GridGraph graph, 
                                            GridGraph.Cell source,
                                            GridGraph.Cell target) {
+        return search(graph, source, target, false);
+    }
+    
+    public static GridGraphPathData search(GridGraph graph, 
+                                           GridGraph.Cell source,
+                                           GridGraph.Cell target,
+                                           boolean memoryStatistics) {
         
         long t = System.currentTimeMillis();
         
@@ -34,10 +41,8 @@ public final class BiBFS {
         parentsB.put(target, null);
         
         while (!frontierA.isEmpty() && !frontierB.isEmpty()) {
-            int traversedA = frontierA.size() + parentsA.size();
-            int traversedB = frontierB.size() + parentsB.size();
             
-            if (traversedA <= traversedB) {
+            if (parentsA.size() <= parentsB.size()) {
                 GridGraph.Cell current = frontierA.removeFirst();
 
                 List<GridGraph.Cell> successors = current.getNeighbours(graph);
@@ -61,7 +66,8 @@ public final class BiBFS {
                                        frontierB, 
                                        parentsA, 
                                        parentsB, 
-                                       searchMillis);
+                                       searchMillis,
+                                       memoryStatistics);
                 }
             } else {
                 GridGraph.Cell current = frontierB.removeFirst();
@@ -87,7 +93,8 @@ public final class BiBFS {
                                        frontierB, 
                                        parentsA, 
                                        parentsB, 
-                                       searchMillis);
+                                       searchMillis,
+                                       memoryStatistics);
                 }
             }
         }
@@ -99,7 +106,8 @@ public final class BiBFS {
                            frontierB,
                            parentsA, 
                            parentsB, 
-                           duration);
+                           duration,
+                           memoryStatistics);
     }
     
     private static List<GridGraph.Cell>
@@ -133,7 +141,12 @@ public final class BiBFS {
                     Deque<GridGraph.Cell> frontierB,
                     Map<GridGraph.Cell, GridGraph.Cell> parentsA,
                     Map<GridGraph.Cell, GridGraph.Cell> parentsB,
-                    long searchMillis) {
+                    long searchMillis,
+                    boolean memoryStatistics) {
+            
+        if (!memoryStatistics) {
+            return new GridGraphPathData(path, -1L, -1L, -1L);
+        }
             
         long t = System.nanoTime();
         

@@ -16,9 +16,17 @@ public final class BFS {
     
     private BFS() {}
     
-    public static GridGraphPathData search(GridGraph graph, 
+    public static GridGraphPathData search(GridGraph graph,
                                            GridGraph.Cell source,
                                            GridGraph.Cell target) {
+        
+        return search(graph, source, target, false);
+    }
+    
+    public static GridGraphPathData search(GridGraph graph, 
+                                           GridGraph.Cell source,
+                                           GridGraph.Cell target,
+                                           boolean memoryStatistics) {
         
         long t = System.currentTimeMillis();
         
@@ -39,7 +47,8 @@ public final class BFS {
                 return getPathData(path,
                                    frontier, 
                                    parents,
-                                   searchMillis);
+                                   searchMillis,
+                                   memoryStatistics);
             }
             
             List<GridGraph.Cell> successors = current.getNeighbours(graph);
@@ -57,14 +66,20 @@ public final class BFS {
         return getPathData(List.of(),
                            frontier, 
                            parents, 
-                           searchMillis);
+                           searchMillis,
+                           memoryStatistics);
     }
     
     private static GridGraphPathData 
         getPathData(List<GridGraph.Cell> path,
                     Deque<GridGraph.Cell> frontier,
                     Map<GridGraph.Cell, GridGraph.Cell> parents,
-                    long searchMillis) {
+                    long searchMillis,
+                    boolean memoryStatistics) {
+            
+        if (!memoryStatistics) {
+            return new GridGraphPathData(path, -1L, -1L, -1L);
+        }
             
         long t = System.nanoTime();
         

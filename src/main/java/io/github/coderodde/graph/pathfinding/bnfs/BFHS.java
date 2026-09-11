@@ -17,6 +17,8 @@ public final class BFHS {
 
     private BFHS() {}
     
+    
+    
     public static GridGraphPathData search(GridGraph graph,
                                            GridGraph.Cell source,
                                            GridGraph.Cell target,
@@ -27,7 +29,22 @@ public final class BFHS {
                       target,
                       h,
                       u,
-                      0);
+                      false);
+    }
+    
+    public static GridGraphPathData search(GridGraph graph,
+                                           GridGraph.Cell source,
+                                           GridGraph.Cell target,
+                                           GridGraphHeuristicFunction h,
+                                           int u,
+                                           boolean memoryStatistics) {
+        return search(graph,
+                      source,
+                      target,
+                      h,
+                      u,
+                      0,
+                      memoryStatistics);
     }
     
     private static GridGraphPathData search(GridGraph graph,
@@ -35,10 +52,10 @@ public final class BFHS {
                                             GridGraph.Cell target,
                                             GridGraphHeuristicFunction h,
                                             int u,
-                                            int depth)  {
+                                            int depth,
+                                            boolean memoryStatistics)  {
         
         if (source.equals(target)) {
-//            System.out.println("fuck");
             return new GridGraphPathData(List.of(source), 0L, 0L, 0L);
         }
         
@@ -100,16 +117,13 @@ public final class BFHS {
                                             0L, 
                                             0L);
                     } else {
-                        if (g.get(middle) == 0) {
-                            System.out.println("yeah");
-                        }
-                        
                         pathData0 = search(graph, 
                                            source,
                                            middle, 
                                            h, 
                                            g.get(middle),
-                                           depth + 1);
+                                           depth + 1,
+                                           memoryStatistics);
                     }
                     
                     if (g.get(sol) - g.get(middle) == 1) {
@@ -123,7 +137,8 @@ public final class BFHS {
                                            sol,
                                            h, 
                                            g.get(sol) - g.get(middle),
-                                           depth + 1);
+                                           depth + 1,
+                                           memoryStatistics);
                     }
                     
                     List<GridGraph.Cell> leftPath = 
@@ -142,7 +157,8 @@ public final class BFHS {
                                            closed, 
                                            g, 
                                            ancestors, 
-                                           searchMillis);
+                                           searchMillis,
+                                           memoryStatistics);
                     } else {
                         return new GridGraphPathData(leftPath,
                                                      0L,
@@ -157,7 +173,7 @@ public final class BFHS {
             }
             
             if (1 < l && l <= relay || l > relay + 1) {
-                closed.get(l - 1).clear();
+                closed.set(l - 1, null);
             }
             
             ++l;
@@ -172,7 +188,8 @@ public final class BFHS {
                            closed, 
                            g, 
                            ancestors, 
-                           searchMillis);
+                           searchMillis,
+                           memoryStatistics);
     }
     
     private static GridGraph.Cell
@@ -242,7 +259,12 @@ public final class BFHS {
                     List<Set<GridGraph.Cell>> closed,
                     Map<GridGraph.Cell, Integer> g,
                     Map<GridGraph.Cell, GridGraph.Cell> ancestors,
-                    long searchMillis) {
+                    long searchMillis,
+                    boolean memoryStatistics) {
+            
+        if (!memoryStatistics) {
+            return new GridGraphPathData(path, -1L, -1L, -1L);
+        }
             
         long t = System.nanoTime();
         
