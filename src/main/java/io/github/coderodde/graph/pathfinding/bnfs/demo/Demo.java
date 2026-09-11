@@ -44,7 +44,7 @@ public final class Demo {
                                                target);
         System.out.println(data2);
         
-        List<GridGraph.Cell> path3 = 
+        GridGraphPathData data3 = 
             BFHS.search(GRAPH,
                         source,
                         target,
@@ -53,13 +53,13 @@ public final class Demo {
         
         boolean pathsEquivalent = 
                 pathsAreEquivalent(GRAPH, data1.path(), data2.path()) 
-             && pathsAreEquivalent(GRAPH, data1.path(), path3);
+             && pathsAreEquivalent(GRAPH, data1.path(), data3.path());
         
         System.out.printf("Algorithms agree: %b.%n", pathsEquivalent);
         
         System.out.println(data1.path().size());
         System.out.println(data2.path().size());
-        System.out.println(path3.size());
+        System.out.println(data3.path().size());
     }
     
     private static boolean 

@@ -1,6 +1,5 @@
 package io.github.coderodde.graph.pathfinding.bnfs;
 
-import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -12,7 +11,7 @@ public final class BFHSTest {
     public void optimalityTest1() {
         GridGraph gg = new GridGraph(2);
         
-        List<GridGraph.Cell> path = 
+        GridGraphPathData data = 
             BFHS.search(gg, 
                         gg.getCell(0, 0), 
                         gg.getCell(1, 1), 
@@ -20,7 +19,7 @@ public final class BFHSTest {
                         2);
         
         
-        System.out.println(path);
-        assertEquals(3, path.size());
+        System.out.println(data.path());
+        assertEquals(3, data.path().size());
     }
 }

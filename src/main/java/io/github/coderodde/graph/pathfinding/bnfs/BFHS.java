@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.openjdk.jol.info.GraphLayout;
 
 /**
  * This class implements the BFHS (Breadth-first heuristic search) algorithm
@@ -16,18 +17,34 @@ public final class BFHS {
 
     private BFHS() {}
     
-    public static List<GridGraph.Cell> search(GridGraph graph,
-                                              GridGraph.Cell source,
-                                              GridGraph.Cell target,
-                                              GridGraphHeuristicFunction h,
-                                              int u) {
+    public static GridGraphPathData search(GridGraph graph,
+                                           GridGraph.Cell source,
+                                           GridGraph.Cell target,
+                                           GridGraphHeuristicFunction h,
+                                           int u) {
+        return search(graph,
+                      source,
+                      target,
+                      h,
+                      u,
+                      0);
+    }
+    
+    private static GridGraphPathData search(GridGraph graph,
+                                            GridGraph.Cell source,
+                                            GridGraph.Cell target,
+                                            GridGraphHeuristicFunction h,
+                                            int u,
+                                            int depth)  {
         
         if (source.equals(target)) {
-            System.out.println("fuck");
-            return List.of(target);
+//            System.out.println("fuck");
+            return new GridGraphPathData(List.of(source), 0L, 0L, 0L);
         }
         
         checkU(u);
+        
+        long t = System.currentTimeMillis();
         
         Map<GridGraph.Cell, Integer> g                = new HashMap<>();
         Map<GridGraph.Cell, GridGraph.Cell> ancestors = new HashMap<>();
@@ -70,38 +87,68 @@ public final class BFHS {
                         ancestors, // Maps each node to ancestor.
                         h);        // The heuristic function.
                 
-                List<GridGraph.Cell> path0;
-                List<GridGraph.Cell> path1;
-                
                 if (sol != null) {
+                    GridGraphPathData pathData0;
+                    GridGraphPathData pathData1;
+
                     GridGraph.Cell middle = ancestors.get(sol);
                     
                     if (g.get(middle) == 1) {
-                        path0 = new ArrayList<>(List.of(source, middle));
+                        pathData0 = new GridGraphPathData(
+                                            List.of(source, middle), 
+                                            0L, 
+                                            0L, 
+                                            0L);
                     } else {
                         if (g.get(middle) == 0) {
                             System.out.println("yeah");
                         }
                         
-                        path0 = new ArrayList<>(search(graph, 
-                                                       source,
-                                                       middle, 
-                                                       h, 
-                                                       g.get(middle)));
+                        pathData0 = search(graph, 
+                                           source,
+                                           middle, 
+                                           h, 
+                                           g.get(middle),
+                                           depth + 1);
                     }
                     
                     if (g.get(sol) - g.get(middle) == 1) {
-                        path1 = List.of(middle, sol);
+                        pathData1 = new GridGraphPathData(List.of(middle, sol),
+                                                          0L,
+                                                          0L,
+                                                          0L);
                     } else {
-                        path1 = search(graph, 
-                                       middle, 
-                                       sol,
-                                       h, 
-                                       g.get(sol) - g.get(middle));
+                        pathData1 = search(graph, 
+                                           middle, 
+                                           sol,
+                                           h, 
+                                           g.get(sol) - g.get(middle),
+                                           depth + 1);
                     }
                     
-                    path0.addAll(path1.subList(1, path1.size()));
-                    return path0;
+                    List<GridGraph.Cell> leftPath = 
+                        new ArrayList<>(pathData0.path());
+                    
+                    List<GridGraph.Cell> rightPath = 
+                        new ArrayList<>(pathData1.path());
+                    
+                    leftPath.addAll(rightPath.subList(1, rightPath.size()));
+                    
+                    if (depth == 0) {
+                        long searchMillis = System.currentTimeMillis();
+                        
+                        return getPathData(leftPath, 
+                                           open, 
+                                           closed, 
+                                           g, 
+                                           ancestors, 
+                                           searchMillis);
+                    } else {
+                        return new GridGraphPathData(leftPath,
+                                                     0L,
+                                                     0L,
+                                                     0L);
+                    }
                 }
             }
             
@@ -114,7 +161,14 @@ public final class BFHS {
             closed.addLast(new HashSet<>());
         }
         
-        return List.of();
+        long searchMillis = System.currentTimeMillis();
+        
+        return getPathData(List.of(),
+                           open,
+                           closed, 
+                           g, 
+                           ancestors, 
+                           searchMillis);
     }
     
     private static GridGraph.Cell
@@ -176,5 +230,32 @@ public final class BFHS {
         if (u < 1) {
             throw new IllegalArgumentException("u(%d) < 1".formatted(u));
         }
+    }
+    
+    private static GridGraphPathData
+        getPathData(List<GridGraph.Cell> path,
+                    List<DoublePriorityBinaryHeap<GridGraph.Cell>> open,
+                    List<Set<GridGraph.Cell>> closed,
+                    Map<GridGraph.Cell, Integer> g,
+                    Map<GridGraph.Cell, GridGraph.Cell> ancestors,
+                    long searchMillis) {
+            
+        long t = System.nanoTime();
+        
+        System.gc();
+        
+        long gcNanos = System.nanoTime() - t;
+        
+        GraphLayout layout = GraphLayout.parseInstance(open, 
+                                                       closed, 
+                                                       g, 
+                                                       ancestors);
+        
+        long totalBytes = layout.totalSize();
+        
+        return new GridGraphPathData(path,
+                                     searchMillis, 
+                                     totalBytes, 
+                                     gcNanos);
     }
 }

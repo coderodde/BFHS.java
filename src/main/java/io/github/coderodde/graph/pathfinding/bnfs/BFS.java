@@ -52,12 +52,12 @@ public final class BFS {
             }        
         }
         
-        long duration = System.currentTimeMillis() - t;
+        long searchMillis = System.currentTimeMillis() - t;
         
         return getPathData(List.of(),
                            frontier, 
                            parents, 
-                           duration);
+                           searchMillis);
     }
     
     private static GridGraphPathData 
