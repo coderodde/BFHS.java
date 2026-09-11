@@ -166,7 +166,7 @@ public final class BiBFS {
                     boolean memoryStatistics) {
             
         if (!memoryStatistics) {
-            return new GridGraphPathData(path, -1L, -1L, -1L);
+            return new GridGraphPathData(path, -1L, -1L, -1L, -1L);
         }
             
         long t = System.nanoTime();
@@ -181,10 +181,27 @@ public final class BiBFS {
                                                        parentsB);
         
         long totalBytes = layout.totalSize();
+        long cellCount  = countCells(frontierA,
+                                     frontierB,
+                                     parentsA,
+                                     parentsB);
         
         return new GridGraphPathData(path, 
                                      searchMillis, 
                                      totalBytes, 
-                                     gcNanos);
+                                     gcNanos,
+                                     cellCount);
     }
+        
+    private static long 
+        countCells(Deque<GridGraph.Cell> frontierA,
+                   Deque<GridGraph.Cell> frontierB,
+                   Map<GridGraph.Cell, GridGraph.Cell> parentsA,
+                   Map<GridGraph.Cell, GridGraph.Cell> parentsB) {
+            
+        return frontierA.size() +
+               frontierB.size() +
+               parentsA.size()  + 
+               parentsB.size();
+    }                           
 }

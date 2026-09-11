@@ -85,7 +85,7 @@ public final class BFHS {
         
         if (source.equals(target)) {
             // We are forced to handle this special case differently.
-            return new GridGraphPathData(List.of(source), 0L, 0L, 0L);
+            return new GridGraphPathData(List.of(source), 0L, 0L, 0L, -1L);
         }
         
         checkU(u);
@@ -144,7 +144,8 @@ public final class BFHS {
                                             List.of(source, middle), 
                                             0L, 
                                             0L, 
-                                            0L);
+                                            0L,
+                                            -1L);
                     } else {
                         pathData0 = search(graph, 
                                            source,
@@ -159,7 +160,8 @@ public final class BFHS {
                         pathData1 = new GridGraphPathData(List.of(middle, sol),
                                                           0L,
                                                           0L,
-                                                          0L);
+                                                          0L,
+                                                          -1L);
                     } else {
                         pathData1 = search(graph, 
                                            middle, 
@@ -192,7 +194,8 @@ public final class BFHS {
                         return new GridGraphPathData(leftPath,
                                                      0L,
                                                      0L,
-                                                     0L);
+                                                     0L,
+                                                     -1L);
                     }
                 }
             }
@@ -292,7 +295,7 @@ public final class BFHS {
                     boolean memoryStatistics) {
             
         if (!memoryStatistics) {
-            return new GridGraphPathData(path, -1L, -1L, -1L);
+            return new GridGraphPathData(path, -1L, -1L, -1L, -1L);
         }
             
         long t = System.nanoTime();
@@ -307,10 +310,34 @@ public final class BFHS {
                                                        ancestors);
         
         long totalBytes = layout.totalSize();
+        long cellCount  = countCells(open, closed, g, ancestors);
         
         return new GridGraphPathData(path,
                                      searchMillis, 
                                      totalBytes,
-                                     gcNanos);
+                                     gcNanos,
+                                     cellCount);
+    }
+        
+    private static long 
+        countCells(List<DoublePriorityBinaryHeap<GridGraph.Cell>> open,
+                   List<Set<GridGraph.Cell>> closed,
+                   Map<GridGraph.Cell, Integer> g,
+                   Map<GridGraph.Cell, GridGraph.Cell> ancestors) {
+        long cellCount = 0L;
+        
+        for (DoublePriorityBinaryHeap<GridGraph.Cell> heap : open) {
+            if (heap != null) {
+                cellCount += heap.size();
+            }
+        }
+        
+        for (Set<GridGraph.Cell> set : closed) {
+            if (set != null) {
+                cellCount += set.size();
+            }
+        }
+        
+        return cellCount + g.size() + ancestors.size();
     }
 }

@@ -99,7 +99,7 @@ public final class BFS {
                     boolean memoryStatistics) {
             
         if (!memoryStatistics) {
-            return new GridGraphPathData(path, -1L, -1L, -1L);
+            return new GridGraphPathData(path, -1L, -1L, -1L, -1L);
         }
             
         long t = System.nanoTime();
@@ -111,11 +111,19 @@ public final class BFS {
         GraphLayout layout = GraphLayout.parseInstance(frontier, parents);
         
         long totalBytes = layout.totalSize();
+        long cellCount  = countCells(frontier, parents);
         
         return new GridGraphPathData(path,
                                      searchMillis, 
                                      totalBytes, 
-                                     gcNanos);
+                                     gcNanos,
+                                     cellCount);
+    }
+        
+    private static long
+         countCells(Deque<GridGraph.Cell> frontier,
+                    Map<GridGraph.Cell, GridGraph.Cell> parents) {
+        return frontier.size() + parents.size();
     }
     
     private static List<GridGraph.Cell> 
