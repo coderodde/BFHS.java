@@ -1,11 +1,11 @@
-package io.github.coderodde.graph.pathfinding.bnfs.demo;
+package io.github.coderodde.graph.pathfinding.bfhs.demo;
 
-import io.github.coderodde.graph.pathfinding.bnfs.BFS;
-import io.github.coderodde.graph.pathfinding.bnfs.BFHS;
-import io.github.coderodde.graph.pathfinding.bnfs.BiBFS;
-import io.github.coderodde.graph.pathfinding.bnfs.GridGraph;
-import io.github.coderodde.graph.pathfinding.bnfs.GridGraphPathData;
-import io.github.coderodde.graph.pathfinding.bnfs.ManhattanHeuristicFunction;
+import io.github.coderodde.graph.pathfinding.bfhs.BFS;
+import io.github.coderodde.graph.pathfinding.bfhs.BFHS;
+import io.github.coderodde.graph.pathfinding.bfhs.BiBFS;
+import io.github.coderodde.graph.pathfinding.bfhs.GridGraph;
+import io.github.coderodde.graph.pathfinding.bfhs.GridGraphPathData;
+import io.github.coderodde.graph.pathfinding.bfhs.ManhattanHeuristicFunction;
 import java.util.List;
 import java.util.Random;
 

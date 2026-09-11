@@ -1,5 +1,10 @@
-package io.github.coderodde.graph.pathfinding.bnfs;
+package io.github.coderodde.graph.pathfinding.bfhs;
 
+import io.github.coderodde.graph.pathfinding.bfhs.ManhattanHeuristicFunction;
+import io.github.coderodde.graph.pathfinding.bfhs.GridGraphPathData;
+import io.github.coderodde.graph.pathfinding.bfhs.GridGraph;
+import io.github.coderodde.graph.pathfinding.bfhs.GridGraphHeuristicFunction;
+import io.github.coderodde.graph.pathfinding.bfhs.BFHS;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

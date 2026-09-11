@@ -1,4 +1,4 @@
-package io.github.coderodde.graph.pathfinding.bnfs;
+package io.github.coderodde.graph.pathfinding.bfhs;
 
 import java.util.ArrayList;
 import java.util.HashMap;

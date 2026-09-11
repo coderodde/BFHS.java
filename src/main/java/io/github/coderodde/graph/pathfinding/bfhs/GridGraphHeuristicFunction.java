@@ -1,4 +1,4 @@
-package io.github.coderodde.graph.pathfinding.bnfs;
+package io.github.coderodde.graph.pathfinding.bfhs;
 
 /**
  * This interface defines the API for grid graph heuristic functions.
