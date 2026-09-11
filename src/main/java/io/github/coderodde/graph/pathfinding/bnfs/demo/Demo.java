@@ -37,12 +37,12 @@ public final class Demo {
         GridGraphPathData data1 = BFS.search(GRAPH, 
                                              source,
                                              target);
-        System.out.println(data1);
+        System.out.println("BFS:   " + data1);
         
         GridGraphPathData data2 = BiBFS.search(GRAPH, 
                                                source, 
                                                target);
-        System.out.println(data2);
+        System.out.println("BiBFS: " + data2);
         
         GridGraphPathData data3 = 
             BFHS.search(GRAPH,
@@ -51,15 +51,13 @@ public final class Demo {
                         new ManhattanHeuristicFunction(),
                         2000);
         
+        System.out.println("BFHS:  " + data3);
+        
         boolean pathsEquivalent = 
                 pathsAreEquivalent(GRAPH, data1.path(), data2.path()) 
              && pathsAreEquivalent(GRAPH, data1.path(), data3.path());
         
         System.out.printf("Algorithms agree: %b.%n", pathsEquivalent);
-        
-        System.out.println(data1.path().size());
-        System.out.println(data2.path().size());
-        System.out.println(data3.path().size());
     }
     
     private static boolean 
