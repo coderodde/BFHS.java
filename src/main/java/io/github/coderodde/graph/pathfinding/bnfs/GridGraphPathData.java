@@ -12,7 +12,7 @@ public final record GridGraphPathData(List<GridGraph.Cell> path,
     
     @Override
     public String toString() {
-        return "Path length: %d, duration: %d ms, bytes: %d, GC: %d ns"
+        return "Path length: %d, search duration: %d ms, bytes: %d, GC: %d ns"
                 .formatted(path.size(),
                            searchMillis,
                            memoryBytes, 

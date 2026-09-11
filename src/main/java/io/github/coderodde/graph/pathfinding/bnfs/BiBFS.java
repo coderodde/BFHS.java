@@ -7,6 +7,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.openjdk.jol.info.GraphLayout;
 
 /**
  * This class implements the bidirectional breadth-first search.
@@ -15,9 +16,11 @@ public final class BiBFS {
     
     private BiBFS() {}
     
-    public static List<GridGraph.Cell> search(GridGraph graph, 
-                                              GridGraph.Cell source,
-                                              GridGraph.Cell target) {
+    public static GridGraphPathData search(GridGraph graph, 
+                                           GridGraph.Cell source,
+                                           GridGraph.Cell target) {
+        
+        long t = System.currentTimeMillis();
         
         Deque<GridGraph.Cell> frontierA              = new ArrayDeque<>();
         Deque<GridGraph.Cell> frontierB              = new ArrayDeque<>();
@@ -47,9 +50,18 @@ public final class BiBFS {
                 }
                 
                 if (parentsB.containsKey(current)) {
-                    return tracebackPath(current,
-                                         parentsA, 
-                                         parentsB);
+                    List<GridGraph.Cell> path = tracebackPath(current,
+                                                              parentsA, 
+                                                              parentsB);
+                    
+                    long searchMillis = System.currentTimeMillis() - t;
+                    
+                    return getPathData(path,
+                                       frontierA,
+                                       frontierB, 
+                                       parentsA, 
+                                       parentsB, 
+                                       searchMillis);
                 }
             } else {
                 GridGraph.Cell current = frontierB.removeFirst();
@@ -64,14 +76,30 @@ public final class BiBFS {
                 }
 
                 if (parentsA.containsKey(current)) {
-                    return tracebackPath(current,
-                                         parentsA, 
-                                         parentsB);
+                    List<GridGraph.Cell> path = tracebackPath(current,
+                                                              parentsA, 
+                                                              parentsB);
+                    
+                    long searchMillis = System.currentTimeMillis() - t;
+                    
+                    return getPathData(path,
+                                       frontierA,
+                                       frontierB, 
+                                       parentsA, 
+                                       parentsB, 
+                                       searchMillis);
                 }
             }
         }
         
-        return List.of();
+        long duration = System.currentTimeMillis() - t;
+        
+        return getPathData(List.of(), 
+                           frontierA,
+                           frontierB,
+                           parentsA, 
+                           parentsB, 
+                           duration);
     }
     
     private static List<GridGraph.Cell>
@@ -97,5 +125,32 @@ public final class BiBFS {
         }
         
         return path;
+    }
+        
+    private static GridGraphPathData
+        getPathData(List<GridGraph.Cell> path,
+                    Deque<GridGraph.Cell> frontierA,
+                    Deque<GridGraph.Cell> frontierB,
+                    Map<GridGraph.Cell, GridGraph.Cell> parentsA,
+                    Map<GridGraph.Cell, GridGraph.Cell> parentsB,
+                    long searchMillis) {
+            
+        long t = System.nanoTime();
+        
+        System.gc();
+        
+        long gcNanos = System.nanoTime() - t;
+        
+        GraphLayout layout = GraphLayout.parseInstance(frontierA,
+                                                       frontierB,
+                                                       parentsA,
+                                                       parentsB);
+        
+        long totalBytes = layout.totalSize();
+        
+        return new GridGraphPathData(path, 
+                                     searchMillis, 
+                                     totalBytes, 
+                                     gcNanos);
     }
 }

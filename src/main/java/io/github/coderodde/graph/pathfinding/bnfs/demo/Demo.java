@@ -15,7 +15,7 @@ import java.util.Random;
  */
 public final class Demo {
     
-    private static final Random RANDOM = new Random();
+    private static final Random RANDOM = new Random(10L);
     private static final GridGraph GRAPH = new GridGraph(1000); // 1000 x 1000
     private static final int WALLS = 50_000;
     
@@ -34,24 +34,15 @@ public final class Demo {
         GridGraph.Cell source = GRAPH.getCell(200, 200);
         GridGraph.Cell target = GRAPH.getCell(1_000 - 200, 1_000 - 200);
         
-        long t = System.currentTimeMillis();
-        
         GridGraphPathData data1 = BFS.search(GRAPH, 
                                              source,
                                              target);
-        
-        System.out.printf("BFS   in %d ms.%n", System.currentTimeMillis() - t);
         System.out.println(data1);
         
-        t = System.currentTimeMillis();
-        
-        List<GridGraph.Cell> path2 = BiBFS.search(GRAPH, 
-                                                  source, 
-                                                  target);
-        
-        System.out.printf("BiBFS in %d ms.%n", System.currentTimeMillis() - t);
-        
-        t = System.currentTimeMillis();
+        GridGraphPathData data2 = BiBFS.search(GRAPH, 
+                                               source, 
+                                               target);
+        System.out.println(data2);
         
         List<GridGraph.Cell> path3 = 
             BFHS.search(GRAPH,
@@ -60,16 +51,14 @@ public final class Demo {
                         new ManhattanHeuristicFunction(),
                         2000);
         
-        System.out.printf("BFHS  in %d ms.%n", System.currentTimeMillis() - t);
-        
         boolean pathsEquivalent = 
-                pathsAreEquivalent(GRAPH, data1.path(), path2) 
+                pathsAreEquivalent(GRAPH, data1.path(), data2.path()) 
              && pathsAreEquivalent(GRAPH, data1.path(), path3);
         
         System.out.printf("Algorithms agree: %b.%n", pathsEquivalent);
         
         System.out.println(data1.path().size());
-        System.out.println(path2.size());
+        System.out.println(data2.path().size());
         System.out.println(path3.size());
     }
     
