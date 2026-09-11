@@ -135,7 +135,7 @@ public final class BFHS {
                     leftPath.addAll(rightPath.subList(1, rightPath.size()));
                     
                     if (depth == 0) {
-                        long searchMillis = System.currentTimeMillis();
+                        long searchMillis = System.currentTimeMillis() - t;
                         
                         return getPathData(leftPath, 
                                            open, 
@@ -150,6 +150,10 @@ public final class BFHS {
                                                      0L);
                     }
                 }
+            }
+            
+            if (l > 0) {
+                open.set(l - 1, null); // Forget previous open frontier.
             }
             
             if (1 < l && l <= relay || l > relay + 1) {
@@ -255,7 +259,7 @@ public final class BFHS {
         
         return new GridGraphPathData(path,
                                      searchMillis, 
-                                     totalBytes, 
+                                     totalBytes,
                                      gcNanos);
     }
 }
