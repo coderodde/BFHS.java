@@ -1,5 +1,6 @@
 package io.github.coderodde.graph.pathfinding.bfhs.demo;
 
+import io.github.coderodde.graph.pathfinding.bfhs.AStar;
 import io.github.coderodde.graph.pathfinding.bfhs.BFS;
 import io.github.coderodde.graph.pathfinding.bfhs.BFHS;
 import io.github.coderodde.graph.pathfinding.bfhs.BiBFS;
@@ -59,9 +60,19 @@ public final class Demo {
         
         System.out.println("BFHS:  " + data3);
         
+        GridGraphPathData data4 = 
+            AStar.search(GRAPH,
+                         source,
+                         target,
+                         new ManhattanHeuristicFunction(),
+                         memoryStatistics);
+        
+        System.out.println("A*:    " + data4);
+        
         boolean pathsEquivalent = 
                 pathsAreEquivalent(GRAPH, data1.path(), data2.path()) 
-             && pathsAreEquivalent(GRAPH, data1.path(), data3.path());
+             && pathsAreEquivalent(GRAPH, data1.path(), data3.path())
+             && pathsAreEquivalent(GRAPH, data1.path(), data4.path());
         
         System.out.printf("Algorithms agree: %b.%n", pathsEquivalent);
     }
