@@ -16,5 +16,5 @@ public sealed interface GridGraphHeuristicFunction
      * 
      * @return the shortest path estimate.
      */
-    public double estimate(GridGraph.Cell a, GridGraph.Cell b);
+    public int estimate(GridGraph.Cell a, GridGraph.Cell b);
 }

@@ -95,13 +95,13 @@ public final class BFHS {
         Map<GridGraph.Cell, Integer> g                = new HashMap<>();
         Map<GridGraph.Cell, GridGraph.Cell> ancestors = new HashMap<>();
         
-        List<DoublePriorityBinaryHeap<GridGraph.Cell>> open = 
+        List<IntPriorityBinaryHeap<GridGraph.Cell>> open = 
             new ArrayList<>();
         
         List<Set<GridGraph.Cell>> closed = new ArrayList<>();
         
-        open.addLast(new DoublePriorityBinaryHeap<>());
-        open.addLast(new DoublePriorityBinaryHeap<>());
+        open.addLast(new IntPriorityBinaryHeap<>());
+        open.addLast(new IntPriorityBinaryHeap<>());
         closed.addLast(new HashSet<>());
         
         open.get(0).insert(source, 0);
@@ -209,7 +209,7 @@ public final class BFHS {
             }
             
             ++l;
-            open.addLast(new DoublePriorityBinaryHeap<>());
+            open.addLast(new IntPriorityBinaryHeap<>());
             closed.addLast(new HashSet<>());
         }
         
@@ -232,7 +232,7 @@ public final class BFHS {
                     int l,
                     int relay,
                     int u,
-                    List<DoublePriorityBinaryHeap<GridGraph.Cell>> open,
+                    List<IntPriorityBinaryHeap<GridGraph.Cell>> open,
                     List<Set<GridGraph.Cell>> closed,
                     Map<GridGraph.Cell, Integer> g,
                     Map<GridGraph.Cell, GridGraph.Cell> ancestors,
@@ -287,7 +287,7 @@ public final class BFHS {
     
     private static GridGraphPathData
         getPathData(List<GridGraph.Cell> path,
-                    List<DoublePriorityBinaryHeap<GridGraph.Cell>> open,
+                    List<IntPriorityBinaryHeap<GridGraph.Cell>> open,
                     List<Set<GridGraph.Cell>> closed,
                     Map<GridGraph.Cell, Integer> g,
                     Map<GridGraph.Cell, GridGraph.Cell> ancestors,
@@ -320,13 +320,13 @@ public final class BFHS {
     }
         
     private static long 
-        countCells(List<DoublePriorityBinaryHeap<GridGraph.Cell>> open,
+        countCells(List<IntPriorityBinaryHeap<GridGraph.Cell>> open,
                    List<Set<GridGraph.Cell>> closed,
                    Map<GridGraph.Cell, Integer> g,
                    Map<GridGraph.Cell, GridGraph.Cell> ancestors) {
         long cellCount = 0L;
         
-        for (DoublePriorityBinaryHeap<GridGraph.Cell> heap : open) {
+        for (IntPriorityBinaryHeap<GridGraph.Cell> heap : open) {
             if (heap != null) {
                 cellCount += heap.size();
             }

@@ -15,7 +15,7 @@ public final class ManhattanHeuristicFunction implements GridGraphHeuristicFunct
      * @return the Manhattan distance between the two cells. 
      */
     @Override
-    public double estimate(GridGraph.Cell a, GridGraph.Cell b) {
+    public int estimate(GridGraph.Cell a, GridGraph.Cell b) {
         return Math.abs(a.x() - b.x()) + Math.abs(a.y() - b.y());
     }
 }

@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
  * 
  * @param <T> the type of the actual datum being stored in the heap.
  */
-public final class DoublePriorityBinaryHeap<T> {
+public final class IntPriorityBinaryHeap<T> {
 
     /**
      * This class implements the binary heap entry.
@@ -29,7 +29,7 @@ public final class DoublePriorityBinaryHeap<T> {
         /**
          * The integer priority of {@code datum}.
          */
-        double priority;
+        int priority;
 
         /**
          * The index at which this entry is located in the {@code table} array.
@@ -37,7 +37,7 @@ public final class DoublePriorityBinaryHeap<T> {
         int index;
 
         BinaryHeapEntry(T datum,
-                        double priority, 
+                        int priority, 
                         int index) {
             
             this.datum    = datum;
@@ -62,7 +62,7 @@ public final class DoublePriorityBinaryHeap<T> {
      * @param datum    the datum to store in this heap.
      * @param priority the priority of the new datum.
      */
-    public void insert(T datum, double priority) {
+    public void insert(T datum, int priority) {
         if (map.containsKey(datum)) {
             throw new IllegalArgumentException("Duplicate datum: " + datum);
         }
@@ -133,7 +133,7 @@ public final class DoublePriorityBinaryHeap<T> {
      * @param datum    the target datum.
      * @param priority the new priority.
      */
-    public void changePriority(T datum, double priority) {
+    public void changePriority(T datum, int priority) {
         BinaryHeapEntry<T> entry = map.get(datum);
         
         if (entry == null) {
@@ -143,8 +143,8 @@ public final class DoublePriorityBinaryHeap<T> {
                     datum));
         }
         
-        double oldPriority = entry.priority;
-        entry.priority = priority;
+        int oldPriority = entry.priority;
+        entry.priority  = priority;
         
         if (priority < oldPriority) {
             siftUp(entry.index);

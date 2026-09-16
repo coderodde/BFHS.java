@@ -13,7 +13,7 @@
                 <exec.vmArgs></exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.appArgs>-m</exec.appArgs>
-                <exec.mainClass>io.github.coderodde.graph.pathfinding.bnfs.demo.Demo</exec.mainClass>
+                <exec.mainClass>io.github.coderodde.graph.pathfinding.bfhs.demo.Demo</exec.mainClass>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
@@ -30,7 +30,7 @@
                 <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.appArgs>-m</exec.appArgs>
-                <exec.mainClass>io.github.coderodde.graph.pathfinding.bnfs.demo.Demo</exec.mainClass>
+                <exec.mainClass>io.github.coderodde.graph.pathfinding.bfhs.demo.Demo</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
             </properties>
@@ -47,7 +47,7 @@
             <properties>
                 <exec.vmArgs></exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-                <exec.mainClass>io.github.coderodde.graph.pathfinding.bnfs.demo.Demo</exec.mainClass>
+                <exec.mainClass>io.github.coderodde.graph.pathfinding.bfhs.demo.Demo</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <exec.appArgs>-m</exec.appArgs>
             </properties>

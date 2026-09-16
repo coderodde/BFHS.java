@@ -8,12 +8,23 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <exec.mainClass>io.github.coderodde.graph.pathfinding.bnfs.BFHS</exec.mainClass>
+        <exec.mainClass>io.github.coderodde.graph.pathfinding.bfhs.demo.Demo</exec.mainClass>
     </properties>
     <name>BFHS.java</name>
     
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.6.4</version>
+                <configuration>
+                    <mainClass>
+                        io.github.coderodde.graph.pathfinding.bfhs.demo.Demo
+                    </mainClass>
+                </configuration>
+            </plugin>
+            
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
